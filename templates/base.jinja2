@@ -1,9 +1,13 @@
 <html>
 <head>
-<title>Mailroom</title>
+<title>Dianna's Mailroom Program</title>
 </head>
 <body>
-	<h1>Donations</h1>
+    <nav>
+        <a id="donations" href="{{ url_for("all_donations") }}">All donations</a>
+        <a id="add donation" href="{{ url_for("add") }}">Add donation</a>
+    </nav>
+	<h1>Dianna's Mailroom Program</h1>
 	<h2>{% block subtitle %} {% endblock subtitle %}</h2>
 	{% block content %} {% endblock content %}
 </body>

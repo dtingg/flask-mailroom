@@ -10,11 +10,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return redirect(url_for('all'))
+    return redirect(url_for('all_donations'))
 
 
 @app.route('/donations/')
-def all():
+def all_donations():
     donations = Donation.select()
     return render_template('donations.jinja2', donations=donations)
 
@@ -32,7 +32,7 @@ def add():
         except Donor.DoesNotExist:
             return render_template("add.jinja2", error="Donor not found. Please try again.")
 
-        return redirect(url_for("all"))
+        return redirect(url_for("all_donations"))
 
 
 if __name__ == "__main__":
