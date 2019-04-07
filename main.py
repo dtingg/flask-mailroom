@@ -29,8 +29,13 @@ def add():
             donor = Donor.select().where(Donor.name == request.form["donor"]).get()
             amount = request.form["amount"]
             Donation(donor=donor, value=amount).save()
+
         except Donor.DoesNotExist:
-            return render_template("add.jinja2", error="Donor not found. Please try again.")
+            # If donor doesn't exist, redisplay the add donation page with an error message.
+            # return render_template("add.jinja2", error="Donor not found. Please try again.")
+
+            # If donor doesn't exist, create a new donor with the donation amount indicated
+            Donation(donor=request.form["donor"], value=amount).save()
 
         return redirect(url_for("all_donations"))
 
