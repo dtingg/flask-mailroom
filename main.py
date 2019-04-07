@@ -35,7 +35,9 @@ def add():
             # return render_template("add.jinja2", error="Donor not found. Please try again.")
 
             # If donor doesn't exist, create a new donor with the donation amount indicated
-            Donation(donor=request.form["donor"], value=amount).save()
+            new_donor = Donor(name=request.form["donor"])
+            new_donor.save()
+            Donation(donor=new_donor, value=request.form["amount"]).save()
 
         return redirect(url_for("all_donations"))
 
