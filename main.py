@@ -1,19 +1,18 @@
 import os
 import base64
-
 from flask import Flask, render_template, request, redirect, url_for, session
-
-from model import Donor, Donation
+from passlib.hash import pbkdf2_sha256
+from model import Donor, Donation, User
 
 app = Flask(__name__)
-
+app.secret_key = os.environ.get("SECRET_KEY").encode()
 
 @app.route('/')
 def home():
     return redirect(url_for('all_donations'))
 
 
-@app.route('/donations/')
+@app.route('/donations')
 def all_donations():
     donations = Donation.select()
     return render_template('donations.jinja2', donations=donations)
@@ -21,6 +20,10 @@ def all_donations():
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
+
+    if "logged_in" not in session:
+        return redirect(url_for("login"))
+
     if request.method == "GET":
         return render_template("add.jinja2")
 
@@ -40,6 +43,41 @@ def add():
             Donation(donor=new_donor, value=request.form["amount"]).save()
 
         return redirect(url_for("all_donations"))
+
+
+
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+
+        try:
+            user = User.select().where(User.name == request.form["username"]).get()
+
+            if user and pbkdf2_sha256.verify(request.form["password"], user.password):
+                session["logged_in"] = request.form["username"]
+                return redirect(url_for("add"))
+        except User.DoesNotExist:
+            return render_template("login.jinja2", error="Incorrect username or password. Please try again.")
+
+    else:
+        return render_template("login.jinja2")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
