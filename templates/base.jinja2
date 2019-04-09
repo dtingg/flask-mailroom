@@ -6,6 +6,8 @@
     <nav>
         <a id="donations" href="{{ url_for("all_donations") }}">All donations</a>
         <a id="add donation" href="{{ url_for("add") }}">Add donation</a>
+        <a id="login page" href="{{url_for("login")}}">Login page</a>
+        <a id="logged in user">Logged in user: {{ session["logged_in"] }}</a>
     </nav>
 	<h1>Dianna's Mailroom Program</h1>
 	<h2>{% block subtitle %} {% endblock subtitle %}</h2>
