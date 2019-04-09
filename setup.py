@@ -1,5 +1,5 @@
-from passlib.hash import pbkdf2_sha256
 import random
+from passlib.hash import pbkdf2_sha256
 from model import db, Donor, Donation, User
 
 db.connect()

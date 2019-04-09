@@ -7,6 +7,7 @@ from model import Donor, Donation, User
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY").encode()
 
+
 @app.route('/')
 def home():
     return redirect(url_for('all_donations'))
@@ -20,7 +21,6 @@ def all_donations():
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
-
     if "logged_in" not in session:
         return redirect(url_for("login"))
 
@@ -45,13 +45,9 @@ def add():
         return redirect(url_for("all_donations"))
 
 
-
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-
         try:
             user = User.select().where(User.name == request.form["username"]).get()
 
@@ -60,24 +56,17 @@ def login():
                 return redirect(url_for("add"))
         except User.DoesNotExist:
             return render_template("login.jinja2", error="Incorrect username or password. Please try again.")
-
     else:
         return render_template("login.jinja2")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+@app.route("/logout", methods=["GET"])
+def logout():
+    try:
+        del session["logged_in"]
+    except KeyError:
+        pass
+    return redirect(url_for("login"))
 
 
 if __name__ == "__main__":
