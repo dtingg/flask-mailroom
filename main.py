@@ -42,6 +42,9 @@ def add():
             new_donor.save()
             Donation(donor=new_donor, value=request.form["amount"]).save()
 
+        except ValueError:
+            return render_template("add.jinja2", error="Incorrect donation amount. Please enter whole dollars only.")
+
         return redirect(url_for("all_donations"))
 
 
@@ -67,6 +70,20 @@ def logout():
     except KeyError:
         pass
     return redirect(url_for("login"))
+
+
+@app.route("/create", methods=["GET", "POST"])
+def create():
+    if request.method == "GET":
+        return render_template("create.jinja2")
+
+    if request.method == "POST":
+        try:
+            query = Donation.select().join(Donor).where(Donor.name == request.form["donor"])
+
+            return render_template("report.jinja2", donations=query)
+        except User.DoesNotExist:
+            return render_template("create.jinja2", error="Donor not found. Please try again.")
 
 
 if __name__ == "__main__":
